@@ -408,7 +408,22 @@ export default InsightsPage;
 const marketInsights: MarketInsight[] = [
   {
     title: "Powai Emerges as Tech Hub",
-    description: "Growing IT sector presence drives property demand, with 28% increase in rental enquiries.",
+    description: "Growing IT sector presence drives property demand, with 25% increase in rental rates over past year",
+    category: "Commercial",
+    date: "2 days ago"
+  },
+  {
+    title: "Bandra West Luxury Market",
+    description: "High-end properties see steady demand despite global economic slowdown",
+    category: "Luxury",
+    date: "1 week ago"
+  },
+  {
+    title: "Thane Infrastructure Boost",
+    description: "New metro line connecting Thane to Mumbai boosts property values by 18%",
+    category: "Infrastructure",
+    date: "3 days ago"
+  }8% increase in rental enquiries.",
     date: "Jan 3, 2024",
     category: "Market Trends"
   },
