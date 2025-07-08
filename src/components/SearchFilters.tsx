@@ -5,6 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface SearchFiltersProps {
   onFilterChange: (filters: any) => void;
@@ -20,7 +22,18 @@ const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     amenities: [] as string[],
     area: [0, 5000],
     isRERA: false,
-    verified: false
+    verified: false,
+    // New filters
+    propertyFor: 'buy',
+    furnishing: 'all',
+    facing: 'all',
+    floor: 'all',
+    age: 'all',
+    possession: 'all',
+    expectedRent: [0, 200000],
+    securityDeposit: [0, 1000000],
+    preferredTenants: 'all',
+    ownership: 'all'
   });
 
   const handleFilterUpdate = (key: string, value: any) => {
@@ -46,7 +59,17 @@ const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       amenities: [],
       area: [0, 5000],
       isRERA: false,
-      verified: false
+      verified: false,
+      propertyFor: 'buy',
+      furnishing: 'all',
+      facing: 'all',
+      floor: 'all',
+      age: 'all',
+      possession: 'all',
+      expectedRent: [0, 200000],
+      securityDeposit: [0, 1000000],
+      preferredTenants: 'all',
+      ownership: 'all'
     };
     setFilters(defaultFilters);
     onFilterChange(defaultFilters);
@@ -64,23 +87,95 @@ const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       </CardHeader>
       
       <CardContent className="space-y-6">
+        {/* Looking to */}
+        <div>
+          <h3 className="font-medium mb-3">Looking to</h3>
+          <RadioGroup
+            value={filters.propertyFor}
+            onValueChange={(value) => handleFilterUpdate('propertyFor', value)}
+            className="flex gap-4"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="buy" id="buy" />
+              <Label htmlFor="buy">Buy</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="rent" id="rent" />
+              <Label htmlFor="rent">Rent</Label>
+            </div>
+          </RadioGroup>
+        </div>
+
+        <Separator />
+
         {/* Price Range */}
         <div>
-          <h3 className="font-medium mb-3">Price Range</h3>
+          <h3 className="font-medium mb-3">
+            {filters.propertyFor === 'buy' ? 'Price Range' : 'Monthly Rent'}
+          </h3>
           <div className="space-y-3">
             <Slider
-              value={filters.priceRange}
-              onValueChange={(value) => handleFilterUpdate('priceRange', value)}
-              max={10000000}
-              step={100000}
+              value={filters.propertyFor === 'buy' ? filters.priceRange : filters.expectedRent}
+              onValueChange={(value) => handleFilterUpdate(filters.propertyFor === 'buy' ? 'priceRange' : 'expectedRent', value)}
+              max={filters.propertyFor === 'buy' ? 10000000 : 200000}
+              step={filters.propertyFor === 'buy' ? 100000 : 1000}
               className="w-full"
             />
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>₹{(filters.priceRange[0] / 100000).toFixed(0)}L</span>
-              <span>₹{(filters.priceRange[1] / 100000).toFixed(0)}L</span>
+              {filters.propertyFor === 'buy' ? (
+                <>
+                  <span>₹{(filters.priceRange[0] / 100000).toFixed(0)}L</span>
+                  <span>₹{(filters.priceRange[1] / 100000).toFixed(0)}L</span>
+                </>
+              ) : (
+                <>
+                  <span>₹{filters.expectedRent[0].toLocaleString()}</span>
+                  <span>₹{filters.expectedRent[1].toLocaleString()}</span>
+                </>
+              )}
             </div>
           </div>
         </div>
+
+        {filters.propertyFor === 'rent' && (
+          <>
+            <Separator />
+            {/* Security Deposit */}
+            <div>
+              <h3 className="font-medium mb-3">Security Deposit</h3>
+              <div className="space-y-3">
+                <Slider
+                  value={filters.securityDeposit}
+                  onValueChange={(value) => handleFilterUpdate('securityDeposit', value)}
+                  max={1000000}
+                  step={10000}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>₹{filters.securityDeposit[0].toLocaleString()}</span>
+                  <span>₹{filters.securityDeposit[1].toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+            {/* Preferred Tenants */}
+            <div>
+              <h3 className="font-medium mb-3">Preferred Tenants</h3>
+              <Select value={filters.preferredTenants} onValueChange={(value) => handleFilterUpdate('preferredTenants', value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Any</SelectItem>
+                  <SelectItem value="Family">Family</SelectItem>
+                  <SelectItem value="Bachelor">Bachelor</SelectItem>
+                  <SelectItem value="Company">Company</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
 
         <Separator />
 
@@ -144,6 +239,24 @@ const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
 
         <Separator />
 
+        {/* Furnishing Status */}
+        <div>
+          <h3 className="font-medium mb-3">Furnishing</h3>
+          <Select value={filters.furnishing} onValueChange={(value) => handleFilterUpdate('furnishing', value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any</SelectItem>
+              <SelectItem value="Unfurnished">Unfurnished</SelectItem>
+              <SelectItem value="Semi-Furnished">Semi-Furnished</SelectItem>
+              <SelectItem value="Fully Furnished">Fully Furnished</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator />
+
         {/* Property Status */}
         <div>
           <h3 className="font-medium mb-3">Status</h3>
@@ -156,6 +269,87 @@ const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
               <SelectItem value="Ready to Move">Ready to Move</SelectItem>
               <SelectItem value="Under Construction">Under Construction</SelectItem>
               <SelectItem value="New Launch">New Launch</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator />
+
+        {/* Possession */}
+        <div>
+          <h3 className="font-medium mb-3">Possession</h3>
+          <Select value={filters.possession} onValueChange={(value) => handleFilterUpdate('possession', value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any</SelectItem>
+              <SelectItem value="immediate">Immediate</SelectItem>
+              <SelectItem value="15days">Within 15 Days</SelectItem>
+              <SelectItem value="30days">Within 30 Days</SelectItem>
+              <SelectItem value="3months">Within 3 Months</SelectItem>
+              <SelectItem value="6months">Within 6 Months</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator />
+
+        {/* Age of Construction */}
+        <div>
+          <h3 className="font-medium mb-3">Age of Property</h3>
+          <Select value={filters.age} onValueChange={(value) => handleFilterUpdate('age', value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any</SelectItem>
+              <SelectItem value="New">New Construction</SelectItem>
+              <SelectItem value="<5">Less than 5 years</SelectItem>
+              <SelectItem value="5-10">5-10 years</SelectItem>
+              <SelectItem value=">10">More than 10 years</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator />
+
+        {/* Facing */}
+        <div>
+          <h3 className="font-medium mb-3">Facing</h3>
+          <Select value={filters.facing} onValueChange={(value) => handleFilterUpdate('facing', value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any</SelectItem>
+              <SelectItem value="North">North</SelectItem>
+              <SelectItem value="South">South</SelectItem>
+              <SelectItem value="East">East</SelectItem>
+              <SelectItem value="West">West</SelectItem>
+              <SelectItem value="North East">North East</SelectItem>
+              <SelectItem value="North West">North West</SelectItem>
+              <SelectItem value="South East">South East</SelectItem>
+              <SelectItem value="South West">South West</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator />
+
+        {/* Floor */}
+        <div>
+          <h3 className="font-medium mb-3">Floor</h3>
+          <Select value={filters.floor} onValueChange={(value) => handleFilterUpdate('floor', value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Any</SelectItem>
+              <SelectItem value="ground">Ground Floor</SelectItem>
+              <SelectItem value="1-5">1st to 5th Floor</SelectItem>
+              <SelectItem value="6-10">6th to 10th Floor</SelectItem>
+              <SelectItem value=">10">Above 10th Floor</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -220,7 +414,16 @@ const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
               'Club House',
               'Garden',
               'Elevator',
-              'Power Backup'
+              'Power Backup',
+              'Children\'s Play Area',
+              'Sports Facility',
+              'Jogging Track',
+              'Indoor Games',
+              'Community Hall',
+              'Temple',
+              'Shopping Center',
+              'School',
+              'Hospital'
             ].map((amenity) => (
               <div key={amenity} className="flex items-center space-x-2">
                 <Checkbox

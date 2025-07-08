@@ -1,22 +1,10 @@
+import { Link } from 'react-router-dom';
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Property } from '@/lib/types';
 
 interface PropertyCardProps {
-  property: {
-    id: string;
-    title: string;
-    location: string;
-    price: string;
-    image: string;
-    beds?: number;
-    baths?: number;
-    sqft?: number;
-    type: string;
-    status: "Ready to Move" | "Under Construction" | "New Launch";
-    possession?: string;
-    isRERA?: boolean;
-    verified?: boolean;
-  };
+  property: Property;
   className?: string;
 }
 
@@ -26,6 +14,7 @@ const PropertyCard = ({ property, className }: PropertyCardProps) => {
       "bg-card rounded-lg border border-border hover:shadow-lg transition-shadow duration-300 overflow-hidden",
       className
     )}>
+      <Link to={`/property/${property.id}`} className="block">
       {/* Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
@@ -57,13 +46,15 @@ const PropertyCard = ({ property, className }: PropertyCardProps) => {
           </Badge>
         </div>
       </div>
-
+      </Link>
       {/* Content Section */}
       <div className="p-4">
         {/* Title */}
-        <h3 className="font-semibold text-foreground mb-1 line-clamp-2">
-          {property.title}
-        </h3>
+        <Link to={`/property/${property.id}`} className="block hover:text-primary transition-colors">
+          <h3 className="font-semibold text-foreground mb-1 line-clamp-2">
+            {property.title}
+          </h3>
+        </Link>
 
         {/* Location */}
         <p className="text-sm text-muted-foreground mb-3 line-clamp-1">

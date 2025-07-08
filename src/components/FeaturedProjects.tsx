@@ -2,36 +2,11 @@ import PropertyCard from "./PropertyCard";
 import { ArrowRight } from "lucide-react";
 
 // Mock data matching 99acres style
-const recommendedProjects = [
-  {
-    id: "1",
-    title: "Dhariwal Magathane Press Enclave CHSL",
-    location: "1, 2, 3 BHK Apartment in Magathane, Borivali East",
-    price: "₹1.1 - 2.86 Cr",
-    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop",
-    beds: 3,
-    baths: 2,
-    sqft: 850,
-    type: "Apartment",
-    status: "Ready to Move" as const,
-    possession: "Possession from Mar 2027",
-    isRERA: true,
-    verified: true,
-  },
-  {
-    id: "2",
-    title: "Apex Green Wood",
-    location: "1, 2 BHK Apartment in Magathane, Borivali East",
-    price: "₹91.73 - 92.95 L",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop",
-    beds: 2,
-    baths: 2,
-    sqft: 650,
-    type: "Apartment",
-    status: "Under Construction" as const,
-    possession: "Possession from Jun 2026",
-    isRERA: true,
-  },
+import { useEffect, useState } from 'react';
+import { api } from '@/lib/api';
+import type { Property } from '@/lib/types';
+
+const recommendedProjects: Property[] = [
   {
     id: "3",
     title: "Lodha Woods",
@@ -73,104 +48,6 @@ const recommendedProjects = [
     status: "New Launch" as const,
     possession: "Possession from Sep 2026",
     isRERA: true,
-  },
-  {
-    id: "6",
-    title: "Runwal Forest",
-    location: "1, 2, 3 BHK Apartment in Kanjurmarg West, Mumbai",
-    price: "₹78 L - 1.95 Cr",
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop",
-    beds: 2,
-    baths: 2,
-    sqft: 580,
-    type: "Apartment",
-    status: "Under Construction" as const,
-    possession: "Possession from Nov 2025",
-    isRERA: true,
-  },
-  {
-    id: "7",
-    title: "Oberoi Realty Sky City",
-    location: "2, 3, 4 BHK Apartment in Borivali East, Mumbai",
-    price: "₹2.50 - 5.20 Cr",
-    image: "https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?w=400&h=300&fit=crop",
-    beds: 3,
-    baths: 3,
-    sqft: 1150,
-    type: "Apartment",
-    status: "Under Construction" as const,
-    possession: "Possession from Mar 2027",
-    isRERA: true,
-  },
-  {
-    id: "8",
-    title: "Mahindra Lifespace Happinest",
-    location: "1, 2 BHK Apartment in Kalyan East, Mumbai",
-    price: "₹35 - 65 L",
-    image: "https://images.unsplash.com/photo-1460574283810-2aab119d8511?w=400&h=300&fit=crop",
-    beds: 1,
-    baths: 1,
-    sqft: 450,
-    type: "Apartment",
-    status: "Ready to Move" as const,
-    possession: "Ready to Move",
-    isRERA: true,
-  },
-  {
-    id: "9",
-    title: "Tata Housing Primanti",
-    location: "1, 2, 3 BHK Apartment in Sector 72, Gurgaon",
-    price: "₹95 L - 1.85 Cr",
-    image: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=400&h=300&fit=crop",
-    beds: 2,
-    baths: 2,
-    sqft: 675,
-    type: "Apartment",
-    status: "Ready to Move" as const,
-    possession: "Ready to Move",
-    isRERA: true,
-  },
-  {
-    id: "10",
-    title: "Hiranandani Fortune City",
-    location: "1, 2, 3 BHK Apartment in Panvel, Navi Mumbai",
-    price: "₹45 - 95 L",
-    image: "https://images.unsplash.com/photo-1439337153520-7082a56a81f4?w=400&h=300&fit=crop",
-    beds: 2,
-    baths: 2,
-    sqft: 550,
-    type: "Apartment",
-    status: "Under Construction" as const,
-    possession: "Possession from Aug 2026",
-    isRERA: true,
-  },
-  {
-    id: "11",
-    title: "Shapoorji Pallonji Joyville",
-    location: "1, 2, 3 BHK Apartment in Howrah, Kolkata",
-    price: "₹28 - 75 L",
-    image: "https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?w=400&h=300&fit=crop",
-    beds: 2,
-    baths: 2,
-    sqft: 620,
-    type: "Apartment",
-    status: "Under Construction" as const,
-    possession: "Possession from Feb 2026",
-    isRERA: true,
-  },
-  {
-    id: "12",
-    title: "Brigade Cornerstone Utopia",
-    location: "2, 3, 4 BHK Apartment in Varthur, Bangalore",
-    price: "₹1.20 - 2.80 Cr",
-    image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?w=400&h=300&fit=crop",
-    beds: 3,
-    baths: 3,
-    sqft: 1050,
-    type: "Apartment",
-    status: "Ready to Move" as const,
-    possession: "Ready to Move",
-    isRERA: true,
   }
 ];
 
@@ -194,6 +71,8 @@ const apartmentTypes = [
 ];
 
 const FeaturedProjects = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <div className="space-y-12">
       {/* Recommended Projects */}
@@ -208,13 +87,24 @@ const FeaturedProjects = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-          {recommendedProjects.map((property, index) => (
-            <PropertyCard 
-              key={property.id} 
-              property={property}
-              className="hover:shadow-lg transition-shadow duration-300"
-            />
-          ))}
+          {isLoading ? (
+            // Loading skeleton
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-[4/3] bg-muted rounded-lg mb-4" />
+                <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                <div className="h-4 bg-muted rounded w-1/2" />
+              </div>
+            ))
+          ) : (
+            recommendedProjects.map((property) => (
+              <PropertyCard 
+                key={property.id} 
+                property={property}
+                className="hover:shadow-lg transition-shadow duration-300"
+              />
+            ))
+          )}
         </div>
 
         <div className="text-center">
