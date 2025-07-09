@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building2, MapPin, Phone, Star, UserCheck, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Dealer {
   id: string;
@@ -102,59 +103,61 @@ const DealersPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredDealers.map((dealer) => (
-            <Card key={dealer.id} className="hover:shadow-lg transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold">{dealer.name}</h3>
-                    {dealer.company && (
-                      <p className="text-sm text-muted-foreground">{dealer.company}</p>
+            <Link key={dealer.id} to={`/dealers/${dealer.id}`} className="block hover:no-underline">
+              <Card className="hover:shadow-lg transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold">{dealer.name}</h3>
+                      {dealer.company && (
+                        <p className="text-sm text-muted-foreground">{dealer.company}</p>
+                      )}
+                    </div>
+                    {dealer.verified && (
+                      <Badge variant="secondary" className="flex items-center gap-1">
+                        <UserCheck className="h-4 w-4" />
+                        Verified
+                      </Badge>
                     )}
                   </div>
-                  {dealer.verified && (
-                    <Badge variant="secondary" className="flex items-center gap-1">
-                      <UserCheck className="h-4 w-4" />
-                      Verified
-                    </Badge>
-                  )}
-                </div>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Building2 className="h-4 w-4 text-muted-foreground" />
-                    <span>{dealer.properties} Properties</span>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Building2 className="h-4 w-4 text-muted-foreground" />
+                      <span>{dealer.properties} Properties</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span>{dealer.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Star className="h-4 w-4 text-yellow-500" />
+                      <span>{dealer.rating} • {dealer.experience} Years Experience</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{dealer.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Star className="h-4 w-4 text-yellow-500" />
-                    <span>{dealer.rating} • {dealer.experience} Years Experience</span>
-                  </div>
-                </div>
 
-                <div className="pt-4 border-t space-y-2">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <a href={`tel:${dealer.phone}`} className="hover:underline">
-                      {dealer.phone}
-                    </a>
+                  <div className="pt-4 border-t space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <a href={`tel:${dealer.phone}`} className="hover:underline">
+                        {dealer.phone}
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <a href={`mailto:${dealer.email}`} className="hover:underline">
+                        {dealer.email}
+                      </a>
+                    </div>
+                    {dealer.reraId && (
+                      <p className="text-sm text-muted-foreground">
+                        RERA ID: {dealer.reraId}
+                      </p>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <a href={`mailto:${dealer.email}`} className="hover:underline">
-                      {dealer.email}
-                    </a>
-                  </div>
-                  {dealer.reraId && (
-                    <p className="text-sm text-muted-foreground">
-                      RERA ID: {dealer.reraId}
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </main>

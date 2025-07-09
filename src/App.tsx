@@ -11,6 +11,7 @@ import PropertyDetails from "./pages/PropertyDetails";
 import DealersPage from "./pages/DealersPage";
 import InsightsPage from "./pages/InsightsPage";
 import SavedPropertiesPage from "./pages/SavedPropertiesPage";
+import DealerDetail from "./pages/DealerDetail";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/buy" element={<SearchResults />} />
           <Route path="/rent" element={<SearchResults />} />
           <Route path="/dealers" element={<DealersPage />} />
+          <Route path="/dealers/:id" element={<DealerDetail />} />
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/saved" element={<SavedPropertiesPage />} />
           <Route path="/requirements" element={<SavedPropertiesPage />} />

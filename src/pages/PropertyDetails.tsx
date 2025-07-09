@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { Phone, Mail, MapPin, BedDouble, Bath, Square, Building2, Calendar, Check, Info } from 'lucide-react';
 import { api } from '@/lib/api';
 import type { Property } from '@/lib/types';
+import MapPlaceholder from "../components/MapPlaceholder";
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
